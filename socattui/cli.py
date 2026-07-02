@@ -73,7 +73,7 @@ def list():
         running = bridge_status.get("running", False)
         pid = bridge_status.get("pid")
         status_text = f"RUNNING (PID: {pid})" if running else "STOPPED"
-        hostname = socket.gethostname()
+        hostname = f"{socket.gethostname()}.local"
         mount_cmd = f"socat PTY,link=/dev/ttyUSB{bridge.name},raw,echo=0 TCP:{hostname}:{bridge.port}"
         click.echo(f"  {bridge.name}")
         click.echo(f"    Device:  {bridge.device}")
