@@ -89,24 +89,24 @@ class AddBridgeScreen(ModalScreen[bool]):
                         classes="form-input"
                     )
 
-                with Horizontal(classes="form-row"):
-                    yield Label("Device:", classes="form-label")
-                    # Build device options for Select
-                    device_options = [(d.path, f"{d.short_name} - {d.description}") for d in self.devices]
-                    if self.bridge:
-                        # Add current device to options if not in detected list
-                        if not any(d.path == self.bridge.device for d in self.devices):
-                            device_options.insert(0, (self.bridge.device, self.bridge.device))
-                    # Ensure at least one option
-                    if not device_options:
-                        device_options = [("/dev/ttyUSB0", "No devices detected")]
-                    yield Select(
-                        device_options,
-                        allow_blank=True,
-                        id="device-select",
-                        classes="form-input",
-                        prompt="Select device..."
-                    )
+            with Horizontal(classes="form-row"):
+                yield Label("Device:", classes="form-label")
+                # Build device options for Select - just paths
+                device_options = [(d.path, d.path) for d in self.devices]
+                if self.bridge:
+                    # Add current device to options if not in detected list
+                    if not any(d.path == self.bridge.device for d in self.devices):
+                        device_options.insert(0, (self.bridge.device, self.bridge.device))
+                # Ensure at least one option
+                if not device_options:
+                    device_options = [("/dev/ttyUSB0", "/dev/ttyUSB0")]
+                yield Select(
+                    device_options,
+                    allow_blank=True,
+                    id="device-select",
+                    classes="form-input",
+                    prompt="Select device..."
+                )
 
                 with Horizontal(classes="form-row"):
                     yield Label("Port:", classes="form-label")
