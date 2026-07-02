@@ -4,9 +4,32 @@ TUI tool for configuring socat USB serial relay/bridging. Easily bridge USB seri
 
 ## Install
 
+### Homebrew (macOS)
+
+```bash
+brew tap Leung-Kam-Ho/socattui
+brew trust Leung-Kam-Ho/socattui
+brew install socattui
+```
+
+To upgrade:
+
+```bash
+brew upgrade socattui
+```
+
+To uninstall:
+
+```bash
+brew uninstall socattui
+brew untap Leung-Kam-Ho/socattui
+```
+
+### From source
+
 ```bash
 # Clone the repo
-git clone <your-repo-url>
+git clone https://github.com/Leung-Kam-Ho/SocatTUI.git
 cd SocatTUI
 
 # Install globally as a CLI tool
