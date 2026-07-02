@@ -4,7 +4,7 @@ import sys
 import click
 
 from .config import load_config
-from .socat import start_all, stop_all, get_status
+from .socat import start_all, stop_all, get_status, _build_socat_cmd
 from .detector import detect_devices
 
 
@@ -73,11 +73,13 @@ def list():
         running = bridge_status.get("running", False)
         pid = bridge_status.get("pid")
         status_text = f"RUNNING (PID: {pid})" if running else "STOPPED"
+        cmd = _build_socat_cmd(bridge)
         click.echo(f"  {bridge.name}")
         click.echo(f"    Device:  {bridge.device}")
         click.echo(f"    Port:    {bridge.port}")
         click.echo(f"    Baud:    {bridge.baudrate}")
         click.echo(f"    Status:  {status_text}")
+        click.echo(f"    Command: {' '.join(cmd)}")
         click.echo()
 
 
