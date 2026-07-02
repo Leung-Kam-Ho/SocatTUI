@@ -15,6 +15,13 @@ uv tool install .
 
 After installation, `socattui` is available globally.
 
+**Important**: If `socattui` is not found when a venv is activated, add `~/.local/bin` to your PATH:
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
 To upgrade:
 
 ```bash
