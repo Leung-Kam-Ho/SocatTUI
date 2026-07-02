@@ -102,6 +102,7 @@ class AddBridgeScreen(ModalScreen[bool]):
                         device_options = [("/dev/ttyUSB0", "No devices detected")]
                     yield Select(
                         device_options,
+                        value=self.bridge.device if self.bridge else Select.BLANK,
                         allow_blank=True,
                         id="device-select",
                         classes="form-input",
@@ -142,7 +143,7 @@ class AddBridgeScreen(ModalScreen[bool]):
             return
 
         # Check device selection
-        if device is Select.BLANK or not device:
+        if device is Select.BLANK or not device or not isinstance(device, str):
             self.notify("Please select a device", severity="error")
             return
 
