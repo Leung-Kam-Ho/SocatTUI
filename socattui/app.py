@@ -146,6 +146,10 @@ class AddBridgeScreen(ModalScreen[bool]):
             self.notify("Please select a device", severity="error")
             return
 
+        # Ensure device path starts with /dev/
+        if not device.startswith("/dev/"):
+            device = f"/dev/{device}"
+
         try:
             port = int(port_str)
             baudrate = int(baudrate_str) if baudrate_str else 9600
