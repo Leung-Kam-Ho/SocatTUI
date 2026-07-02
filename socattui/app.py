@@ -100,24 +100,21 @@ class AddBridgeScreen(ModalScreen[bool]):
                     # Ensure at least one option
                     if not device_options:
                         device_options = [("/dev/ttyUSB0", "No devices detected")]
-                    # Determine initial value
-                    initial_device = Select.BLANK
-                    if self.bridge and self.bridge.device:
-                        if any(d.path == self.bridge.device for d in self.devices):
-                            initial_device = self.bridge.device
-                        else:
-                            # Device not detected, add it as first option
-                            device_options.insert(0, (self.bridge.device, self.bridge.device))
-                            initial_device = self.bridge.device
-
-                    yield Select(
-                        device_options,
-                        value=initial_device,
-                        allow_blank=True,
-                        id="device-select",
-                        classes="form-input",
-                        prompt="Select device..."
-                    )
+                    if self.bridge:
+                        yield Select(
+                            device_options,
+                            value=self.bridge.device,
+                            id="device-select",
+                            classes="form-input",
+                        )
+                    else:
+                        yield Select(
+                            device_options,
+                            allow_blank=True,
+                            id="device-select",
+                            classes="form-input",
+                            prompt="Select device..."
+                        )
 
                 with Horizontal(classes="form-row"):
                     yield Label("Port:", classes="form-label")
