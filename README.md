@@ -120,3 +120,26 @@ bridges:
 
 - Python 3.12+
 - socat installed (`brew install socat` or `apt install socat`)
+
+## Roadmap
+
+SocatTUI currently works perfectly fine for USB serial to TCP bridging. However, the ultimate future goal is to support **all** functions and address types available in the `socat` utility, providing a complete and intuitive TUI for any complex `socat` configuration.
+
+- [x] USB Serial to TCP bridging
+- [ ] UDP support
+- [ ] UNIX domain sockets
+- [ ] File/Pipe streaming
+- [ ] SSL/TLS wrapping
+- [ ] Advanced `socat` options support
+
+## Contributing
+
+Contributions are always welcome! If you'd like to help achieve the roadmap goals, fix bugs, or improve the TUI:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+Feel free to open an issue for bug reports, suggestions, or feature requests.
