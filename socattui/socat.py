@@ -140,6 +140,11 @@ def get_status(config: Config | None = None) -> dict[str, dict]:
 
 def _build_socat_cmd(bridge: Bridge) -> list[str]:
     """Build socat command for a bridge."""
+    import sys
     tcp_part = f"TCP-LISTEN:{bridge.port},fork,reuseaddr"
-    file_part = f"FILE:{bridge.device},b{bridge.baudrate},raw,echo=0"
+    # macOS has a known bug - must use ispeed/ospeed instead of b
+    if sys.platform == "darwin":
+        file_part = f"FILE:{bridge.device},ispeed={bridge.baudrate},ospeed={bridge.baudrate},raw,echo=0"
+    else:
+        file_part = f"FILE:{bridge.device},b{bridge.baudrate},raw,echo=0"
     return ["socat", tcp_part, file_part]
