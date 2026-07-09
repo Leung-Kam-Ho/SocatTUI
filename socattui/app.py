@@ -297,9 +297,9 @@ class SocatTUI(App):
         self.devices = detect_devices()
         table = self.query_one("#devices-table", DataTable)
         table.clear(columns=True)
-        table.add_columns("Device", "Description")
+        table.add_columns("Device", "HWID")
         for dev in self.devices:
-            table.add_row(dev.path, dev.description or dev.short_name)
+            table.add_row(dev.path, dev.hwid or "Unknown")
 
     def _refresh_bridges(self) -> None:
         """Reload and display configured bridges."""
