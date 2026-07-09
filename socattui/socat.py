@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from .config import Config, Bridge, load_config, save_config
+from .detector import detect_devices
 
 
 PID_DIR = Path.home() / ".config" / "socattui" / "pids"
@@ -54,6 +55,17 @@ def start_bridge(bridge: Bridge, detached: bool = True) -> bool:
 
     if is_running(bridge):
         return True  # Already running
+
+    # Try to resolve device by HWID if available
+    resolved_device = bridge.device
+    if bridge.hwid:
+        devices = detect_devices()
+        for d in devices:
+            if d.hwid == bridge.hwid:
+                resolved_device = d.path
+                # Optional: Update the bridge object's device so UI reflects it
+                bridge.device = resolved_device
+                break
 
     cmd = _build_socat_cmd(bridge)
 

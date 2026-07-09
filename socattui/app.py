@@ -165,7 +165,18 @@ class AddBridgeScreen(ModalScreen[bool]):
             self.notify("Port and baudrate must be numbers", severity="error")
             return
 
-        new_bridge = Bridge(name=name, device=device, port=port, baudrate=baudrate)
+        hwid = None
+        for d in self.devices:
+            if d.path == device:
+                hwid = d.hwid
+                break
+
+        # If editing and we didn't find the hwid in currently connected devices,
+        # but the device path is the same, keep the old hwid if we have one.
+        if hwid is None and self.is_edit and self.bridge and self.bridge.device == device:
+            hwid = self.bridge.hwid
+
+        new_bridge = Bridge(name=name, device=device, port=port, baudrate=baudrate, hwid=hwid)
 
         if self.is_edit and self.bridge:
             # Update existing
@@ -308,7 +319,7 @@ class SocatTUI(App):
 
         table = self.query_one("#bridges-table", DataTable)
         table.clear(columns=True)
-        table.add_columns("Name", "Device", "Port", "Baud", "Status")
+        table.add_columns("Name", "Device", "HWID", "Port", "Baud", "Status")
 
         for bridge in self.config.bridges:
             bridge_status = status.get(bridge.name, {})
@@ -318,6 +329,7 @@ class SocatTUI(App):
             table.add_row(
                 bridge.name,
                 bridge.device,
+                bridge.hwid or "N/A",
                 str(bridge.port),
                 str(bridge.baudrate),
                 status_text,

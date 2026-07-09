@@ -77,6 +77,8 @@ def list():
         mount_cmd = f"socat PTY,link=/dev/ttyUSB{bridge.name},raw,echo=0 TCP:{hostname}:{bridge.port}"
         click.echo(f"  {bridge.name}")
         click.echo(f"    Device:  {bridge.device}")
+        if bridge.hwid:
+            click.echo(f"    HWID:    {bridge.hwid}")
         click.echo(f"    Port:    {bridge.port}")
         click.echo(f"    Baud:    {bridge.baudrate}")
         click.echo(f"    Status:  {status_text}")
@@ -97,6 +99,8 @@ def detect():
     for dev in devices:
         desc = f" - {dev.description}" if dev.description else ""
         click.echo(f"  {dev.path}{desc}")
+        if dev.hwid:
+            click.echo(f"    HWID: {dev.hwid}")
 
 
 def main():
