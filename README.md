@@ -2,6 +2,11 @@
 
 TUI tool for configuring socat USB serial relay/bridging. Easily bridge USB serial devices to TCP ports without editing shell scripts.
 
+**Features:**
+- Automatic Hardware ID (HWID) tracking: Bridges reliably reconnect to your USB devices even if the OS assigns them a different device path (e.g. changing from `/dev/ttyUSB0` to `/dev/ttyUSB1`).
+- Intuitive TUI for managing multiple bridges.
+- CLI for quick start/stop operations.
+
 ## Install
 
 ### Homebrew (macOS)
@@ -103,10 +108,12 @@ Saved to `~/.config/socattui/config.yaml`:
 bridges:
   - name: Arduino Uno
     device: /dev/cu.usbserial-220
+    hwid: 'USB VID:PID=2341:0043 SER=557363138333512022D2 LOCATION=2-1'
     port: 7777
     baudrate: 9600
   - name: Raspberry Pi
     device: /dev/ttyACM0
+    hwid: 'USB VID:PID=2E8A:0005 SER=E66058388325B229 LOCATION=1-1'
     port: 7778
     baudrate: 9600
 ```
