@@ -56,9 +56,9 @@ def start_bridge(bridge: Bridge, detached: bool = True) -> bool:
     if is_running(bridge):
         return True  # Already running
 
-    # Try to resolve device by HWID if available
+    # Try to resolve device by HWID if target_type is 'hwid' and HWID is available
     resolved_device = bridge.device
-    if bridge.hwid:
+    if getattr(bridge, "target_type", "hwid") == "hwid" and bridge.hwid:
         devices = detect_devices()
         for d in devices:
             if d.hwid == bridge.hwid:

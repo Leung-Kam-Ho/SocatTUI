@@ -22,7 +22,7 @@ class AddBridgeScreen(ModalScreen[bool]):
     CSS = """
     #add-dialog {
         width: 80;
-        height: 28;
+        height: 34;
         border: tall $primary;
         background: $surface;
         layout: vertical;
@@ -117,6 +117,20 @@ class AddBridgeScreen(ModalScreen[bool]):
                         )
 
                 with Horizontal(classes="form-row"):
+                    yield Label("Target By:", classes="form-label")
+                    target_options = [
+                        ("HWID", "hwid"),
+                        ("Device Name", "device"),
+                    ]
+                    target_val = self.bridge.target_type if self.bridge else "hwid"
+                    yield Select(
+                        target_options,
+                        value=target_val,
+                        id="target-type-select",
+                        classes="form-input",
+                    )
+
+                with Horizontal(classes="form-row"):
                     yield Label("Port:", classes="form-label")
                     yield Input(
                         value=str(self.bridge.port) if self.bridge else "7777",
@@ -142,6 +156,7 @@ class AddBridgeScreen(ModalScreen[bool]):
     def save_pressed(self) -> None:
         name = self.query_one("#name-input", Input).value.strip()
         device = self.query_one("#device-select", Select).value
+        target_type_val = self.query_one("#target-type-select", Select).value
         port_str = self.query_one("#port-input", Input).value.strip()
         baudrate_str = self.query_one("#baudrate-input", Input).value.strip()
 
@@ -153,6 +168,8 @@ class AddBridgeScreen(ModalScreen[bool]):
         if device is Select.BLANK or not device or not isinstance(device, str):
             self.notify("Please select a device", severity="error")
             return
+
+        target_type = target_type_val if isinstance(target_type_val, str) and target_type_val in ("hwid", "device") else "hwid"
 
         # Ensure device path starts with /dev/
         if not device.startswith("/dev/"):
@@ -176,7 +193,14 @@ class AddBridgeScreen(ModalScreen[bool]):
         if hwid is None and self.is_edit and self.bridge and self.bridge.device == device:
             hwid = self.bridge.hwid
 
-        new_bridge = Bridge(name=name, device=device, port=port, baudrate=baudrate, hwid=hwid)
+        new_bridge = Bridge(
+            name=name,
+            device=device,
+            port=port,
+            baudrate=baudrate,
+            hwid=hwid,
+            target_type=target_type,
+        )
 
         if self.is_edit and self.bridge:
             # Update existing
@@ -319,16 +343,18 @@ class SocatTUI(App):
 
         table = self.query_one("#bridges-table", DataTable)
         table.clear(columns=True)
-        table.add_columns("Name", "Device", "HWID", "Port", "Baud", "Status")
+        table.add_columns("Name", "Device", "Target By", "HWID", "Port", "Baud", "Status")
 
         for bridge in self.config.bridges:
             bridge_status = status.get(bridge.name, {})
             running = bridge_status.get("running", False)
             pid = bridge_status.get("pid")
             status_text = f"Running (PID: {pid})" if running else "Stopped"
+            target_display = "HWID" if getattr(bridge, "target_type", "hwid") == "hwid" else "Device Name"
             table.add_row(
                 bridge.name,
                 bridge.device,
+                target_display,
                 bridge.hwid or "N/A",
                 str(bridge.port),
                 str(bridge.baudrate),

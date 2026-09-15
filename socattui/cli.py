@@ -75,11 +75,13 @@ def list():
         status_text = f"RUNNING (PID: {pid})" if running else "STOPPED"
         hostname = f"{socket.gethostname()}.local"
         mount_cmd = f"socat PTY,link=/dev/ttyUSB{bridge.name},raw,echo=0 TCP:{hostname}:{bridge.port}"
+        target_display = "HWID" if getattr(bridge, "target_type", "hwid") == "hwid" else "Device Name"
         click.echo(f"  {bridge.name}")
-        click.echo(f"    Device:  {bridge.device}")
+        click.echo(f"    Device:    {bridge.device}")
+        click.echo(f"    Target By: {target_display}")
         if bridge.hwid:
-            click.echo(f"    HWID:    {bridge.hwid}")
-        click.echo(f"    Port:    {bridge.port}")
+            click.echo(f"    HWID:      {bridge.hwid}")
+        click.echo(f"    Port:      {bridge.port}")
         click.echo(f"    Baud:    {bridge.baudrate}")
         click.echo(f"    Status:  {status_text}")
         click.echo(f"    Mount:   {mount_cmd}")

@@ -20,6 +20,7 @@ class Bridge:
     port: int
     baudrate: int = 9600
     hwid: Optional[str] = None
+    target_type: str = "hwid"
     pid: Optional[int] = None
 
     def to_dict(self) -> dict:
@@ -35,6 +36,7 @@ class Bridge:
             port=data["port"],
             baudrate=data.get("baudrate", 9600),
             hwid=data.get("hwid"),
+            target_type=data.get("target_type", "hwid"),
         )
 
 
