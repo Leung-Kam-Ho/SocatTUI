@@ -9,7 +9,7 @@ from .detector import detect_devices
 import socket
 
 @click.group()
-@click.version_option(version="0.2.1")
+@click.version_option(version="0.6.0")
 def cli():
     """SocatTUI - USB Serial Bridge Manager"""
     pass
